@@ -4,7 +4,11 @@ penguinPromise.then
 (
 function(penguins)
     {
+        //imgLegend(penguins);
+        
         setup(penguins);
+        
+        console.log(getImage(penguins));
         
         console.log(getClassQuiz(penguins));
         
@@ -32,6 +36,14 @@ var getClassQuiz = function(penguins)
     {
         return penguins.map(getQuiz)
     }
+
+var getImage = function(penguins)
+    {
+        return penguins.picture
+    }
+
+
+
 
 var screen = {width:800,height:500}
 var margins = {top:10,right:50,bottom:50,left:50}
@@ -78,6 +90,7 @@ var setup = function(penguins)
         
         
         drawArray(penguins,xScale,yScale);
+        //imgLegend(penguins);
     }
 
 
@@ -104,13 +117,60 @@ var drawArray = function(penguins,xScale,yScale)
         quizes.data(getClassQuiz(penguins))
                 .append("path")
                 .attr("d",lineGenerator)
+                .on("mouseover",mouseover)
+                .on("mouseout",mouseout)
+                //.on("mouseover",imgLegend)
         
         
     }
 
+var mouseover = function(d,i)
+    {
+        d3.select(this)
+            .style("stroke","orange");
+        
+        var penImage = d3.select("div")
+                        .selectAll("img")
+                        .data(d)
+                        .enter()
+                        .append("img")
+                        .attr("src",function(penguin)
+                            {
+                                return penguin.picture;
+                            })
+        
+            
+    }
+
+var mouseout = function(d,i)
+    {
+        d3.select(this).style("stroke","black")
+    }
 
 
-
+/*var imgLegend = function(penguins)
+    {
+        d3.select("svg")
+            .append("g")
+            .attr("id","imgPenguin")
+            .attr("transform","translate("+(screen.width-margins.right)+","+ (margins.top)+")")
+    
+        var imgP = d3.selectAll("#imgPenguin")
+                    .selectAll("g")
+                    .data(penguins)
+                    .enter()
+                    .append("g")
+                    .append("rect").attr("width",10).attr("height",10)
+                    .attr("transform",function(penguin,i)
+                            {
+                                return "translate(0, "+(i*14)+")";
+                            })
+                    .attr("xlink:href",function(p)
+                        {
+                        return p.picture;
+                        })
+                    .attr("width",10).attr("height",10)   
+    }*/
 
 
 
