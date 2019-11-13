@@ -8,7 +8,11 @@ function(penguins)
         
         setup(penguins);
         
-        console.log(getImage(penguins));
+        console.log(getClassQuiz(penguins).pic[0])
+        
+        //console.log(getQuiz(penguins));
+        
+        //console.log(getImage(penguins));
         
         console.log(getClassQuiz(penguins));
         
@@ -23,7 +27,7 @@ function(errs)
 // get the quiz grades for every penguin
 var getQuiz = function(penguin)
     {
-        return penguin.quizes.map(getGrade)
+        return  penguin.quizes.map(getGrade)
     }
 
 var getGrade = function(quiz)
@@ -34,7 +38,7 @@ var getGrade = function(quiz)
 // array we want to work with going forward
 var getClassQuiz = function(penguins)
     {
-        return penguins.map(getQuiz)
+        return {quiz: penguins.map(getQuiz),pic: penguins.map(getImage)}
     }
 
 var getImage = function(penguins)
@@ -45,7 +49,7 @@ var getImage = function(penguins)
 
 
 
-var screen = {width:800,height:500}
+var screen = {width:1200,height:900}
 var margins = {top:10,right:50,bottom:50,left:50}
 
 var setup = function(penguins)
@@ -99,12 +103,13 @@ var drawArray = function(penguins,xScale,yScale)
     {
         var quizes = d3.select("#quizLines")
                         .selectAll("g")
-                        .data(getClassQuiz(penguins))
+                        .data(getClassQuiz(penguins).quiz)
                         .enter()
                         .append("g")
                         .attr("fill","none")
-                        .attr("stroke","black")
-                        .attr("stroke-width",3)
+                        .attr("stroke","#4169e1")
+                        .attr("stroke-width",2)
+                        //.attr("opacity",0.3);
         
         
         
@@ -114,7 +119,7 @@ var drawArray = function(penguins,xScale,yScale)
             .curve(d3.curveMonotoneX)
         
         
-        quizes.data(getClassQuiz(penguins))
+        quizes.data(getClassQuiz(penguins).quiz)
                 .append("path")
                 .attr("d",lineGenerator)
                 .on("mouseover",mouseover)
@@ -127,24 +132,49 @@ var drawArray = function(penguins,xScale,yScale)
 var mouseover = function(d,i)
     {
         d3.select(this)
-            .style("stroke","orange");
+            .style("stroke","black")
+            //.attr("opacity",1)
+            .attr("stroke-width",5)
         
-        var penImage = d3.select("div")
+        
+        /*var penImage = d3.select("div")
                         .selectAll("img")
-                        .data(d)
+                        .data(getClassQuiz(penguins))
                         .enter()
                         .append("img")
                         .attr("src",function(penguin)
                             {
-                                return penguin.picture;
-                            })
+                                return "penguin/"+ penguin.pic;
+                            })*/
         
+        
+        /* d3.select("svg")
+            .append("g")
+            .attr("id","imgPenguin")
+            .attr("transform","translate("+(screen.width-margins.right)+","+ (margins.top)+")")
+    
+        var imgP = d3.select("#imgPenguin")
+                    .selectAll("image")
+                    .data(getClassQuiz(penguins).pic)
+                    .enter()
+                    .append("image").attr("width",10).attr("height",10)
+                    .attr("transform",function(penguin,i)
+                            {
+                                return "translate(0, "+(i*14)+")";
+                            })
+                    .attr("xlink:href",function(p)
+                        {
+                        return "penguins/"+p.pic;
+                        })
+                    .attr("width",50).attr("height",50) */
             
     }
 
 var mouseout = function(d,i)
     {
-        d3.select(this).style("stroke","black")
+        d3.select(this).style("stroke","#4169e1")
+        //.style("opacity",0.3)
+        .attr("stroke-width",2)
     }
 
 
@@ -156,26 +186,35 @@ var mouseout = function(d,i)
             .attr("transform","translate("+(screen.width-margins.right)+","+ (margins.top)+")")
     
         var imgP = d3.selectAll("#imgPenguin")
-                    .selectAll("g")
-                    .data(penguins)
+                    .selectAll("image")
+                    .data(getClassQuiz(penguins).pic)
                     .enter()
-                    .append("g")
-                    .append("rect").attr("width",10).attr("height",10)
+                    .append("image").attr("width",10).attr("height",10)
                     .attr("transform",function(penguin,i)
                             {
                                 return "translate(0, "+(i*14)+")";
                             })
                     .attr("xlink:href",function(p)
                         {
-                        return p.picture;
+                        return "penguins/"+p.picture;
                         })
-                    .attr("width",10).attr("height",10)   
-    }*/
+                    .attr("width",50).attr("height",50)   
+    }
+*/
 
 
 
-
-
+/*
+   var penImage = d3.select("div")
+                        .selectAll("img")
+                        .data(d)
+                        .enter()
+                        .append("img")
+                        .attr("src",function(penguin)
+                            {
+                                return penguin.picture;
+                            })
+*/
 
 
 
